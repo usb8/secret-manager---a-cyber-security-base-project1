@@ -7,14 +7,14 @@ from .models import Secret
 import sqlite3
 import pickle
 
-# Flaw A2:2017-Broken Authentication (Session fixation vulnerability)
+# 🔴 Flaw A2:2017-Broken Authentication (Session fixation vulnerability)
 @csrf_exempt
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         
-        # No session regeneration after login
+        # ❌ No session regeneration after login
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -26,57 +26,76 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-# Flaw A1:2017-Injection (Raw SQL query without parameterization)
+# 🔴🔴 Flaw A1:2017-Injection (Raw SQL query without parameterization)
 @login_required
 def search_secrets(request):
     search_term = request.GET.get('q', '')
     
-    # Vulnerable SQL query
+    # ❌ Vulnerable SQL query
     conn = sqlite3.connect('db.sqlite3')
     cursor = conn.cursor()
-    query = f"SELECT * FROM secret_manager_secret WHERE title LIKE '%{search_term}%' AND user_id = {request.user.id}"
+    query = f"""
+    SELECT id, title, secret_header, secret_key, created_at 
+    FROM secret_manager_secret 
+    WHERE title LIKE '%{search_term}%' AND user_id = {request.user.id}
+    """
     cursor.execute(query)
     results = cursor.fetchall()
     
-    # Convert results to Secret objects for template
+    # Convert results to dictionary for template
     secrets = []
     for row in results:
-        secret = Secret(id=row[0], user=request.user, title=row[2], content=row[3])
-        secrets.append(secret)
+        secrets.append({
+            'id': row[0],
+            'title': row[1],
+            'secret_header': row[2],
+            'secret_key': row[3],  # A3: Exposing encrypted/unencrypted key
+            'created_at': row[4]
+        })
     
     return render(request, 'secrets.html', {'secrets': secrets})
 
-# Flaw A3:2017-Sensitive Data Exposure (Secrets stored in plaintext)
+# 🔴🔴 Flaw A3:2017-Sensitive Data Exposure (Showing decrypted secrets)
 @login_required
 def secret_detail(request, secret_id):
-    secret = Secret.objects.get(id=secret_id, user=request.user)
-    # No encryption of sensitive data
-    return render(request, 'secret_detail.html', {'secret': secret})
+    secret = Secret.objects.get(id=secret_id)
+    
+    # ❌ No proper authorization check (A5) and showing decrypted secret (A3)
+    decrypted_key = secret.secret_key
+    if secret.is_encrypted:
+        decrypted_key = secret.get_decrypted_key()
+    
+    return render(request, 'secret_detail.html', {
+        'secret': secret,
+        'decrypted_key': decrypted_key  # Dangerous!
+    })
 
-# Flaw A5:2017-Broken Access Control (Missing authorization check)
+# 🔴🔴 Flaw A5:2017-Broken Access Control (Missing user association)
 @login_required
 def create_secret(request):
     if request.method == 'POST':
         title = request.POST['title']
-        content = request.POST['content']
+        secret_header = request.POST.get('secret_header', '')
+        secret_key = request.POST['secret_key']
         
-        # No validation that the user owns this secret
-        Secret.objects.create(
+        # ❌ Vulnerable - no validation, accepts any data
+        secret = Secret.objects.create(
             user=request.user,
             title=title,
-            content=content
+            secret_header=secret_header,
+            secret_key=secret_key,
         )
         return redirect('secrets')
     
     return render(request, 'create_secret.html')
 
-# Flaw A8:2017-Insecure Deserialization
+# 🔴 Flaw A8:2017-Insecure Deserialization
 @csrf_exempt
 def import_secrets(request):
     if request.method == 'POST' and request.FILES['file']:
         uploaded_file = request.FILES['file']
         
-        # Dangerous deserialization
+        # ❌ Dangerous deserialization
         data = pickle.load(uploaded_file)
         for item in data:
             Secret.objects.create(
@@ -90,7 +109,7 @@ def import_secrets(request):
 
 @login_required
 def secrets(request):
-    # Flaw A6:2017-Security Misconfiguration (Debug mode left on)
+    # 🔴 Flaw A6:2017-Security Misconfiguration (Debug mode left on)
     # In settings.py we would have DEBUG = True in the vulnerable version
     
     secrets = Secret.objects.filter(user=request.user)

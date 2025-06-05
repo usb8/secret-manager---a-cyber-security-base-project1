@@ -22,8 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-0sx$4-3-e=1a1j2$81_056jsrv21#fsk=_v=(47=&o^pfwxu=h'
 
+# Encryption settings # 🔴 Flaw A3:2017-Sensitive Data Exposure
+ENABLE_ENCRYPTION = False  # ❌ Vulnerability: Set to False to demonstrate A3
+SECRET_MANAGER_KEY = 'one-very-secure-key-here'  # Should be in environment variables
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # Flaw A6:2017-Security Misconfiguration
+DEBUG = True # 🔴 Flaw A6:2017-Security Misconfiguration
 
 ALLOWED_HOSTS = []
 
@@ -44,8 +48,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware', # Flaw A5:2017-Broken Access Control (CSRF middleware)
-    # In a real app, Django has CSRF protection by default, but we're showing it as a vulnerability
+    # 'django.middleware.csrf.CsrfViewMiddleware', # 🔴 Flaw A5:2017-Broken Access Control (CSRF middleware), Disabled for A5 demonstration
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

@@ -27,19 +27,21 @@ bob = User.objects.get(username='bob')
 Secret.objects.create(
     user=alice,
     title="Bank Account",
-    content="Username: alice_bank, Password: s3cr3t123",
+    secret_header="Username: alice_bank",
+    secret_key="s3cr3t123",
 )
 
 Secret.objects.create(
     user=alice,
     title="Treasure Location",
-    content="Under the oak tree in the backyard",
+    secret_key="Under the oak tree in the backyard",
 )
 
 Secret.objects.create(
     user=bob,
     title="Email Password",
-    content="Email: bob_sub@example.com, Password: b0b3m@il",
+    secret_header="Email: bob_sub@example.com",
+    secret_key="b0b3m@il",
 )
 EOF
 
