@@ -35,7 +35,7 @@ def search_secrets(request):
     conn = sqlite3.connect('db.sqlite3')
     cursor = conn.cursor()
     query = f"""
-    SELECT id, title, secret_header, secret_key, created_at 
+    SELECT id, title, secret_header, created_at, user_id
     FROM secret_manager_secret 
     WHERE title LIKE '%{search_term}%' AND user_id = {request.user.id}
     """
@@ -49,9 +49,22 @@ def search_secrets(request):
             'id': row[0],
             'title': row[1],
             'secret_header': row[2],
-            'secret_key': row[3],  # A3: Exposing encrypted/unencrypted key
-            'created_at': row[4]
+            'created_at': row[3],
+            'user': request.user if request.user.id == row[4] else None
         })
+    
+    return render(request, 'secrets.html', {'secrets': secrets})
+
+# 🟢🟢 Fixed version
+@login_required
+def search_secrets_fixed(request):
+    search_term = request.GET.get('q', '')
+    
+    # ✔️ Safe ORM query
+    secrets = Secret.objects.filter(
+        title__icontains=search_term,
+        user=request.user
+    ).values('id', 'title', 'secret_header', 'created_at')
     
     return render(request, 'secrets.html', {'secrets': secrets})
 

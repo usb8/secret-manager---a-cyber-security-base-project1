@@ -10,4 +10,7 @@ urlpatterns = [
     path('secret/<int:secret_id>/', views.secret_detail, name='secret_detail'),
     path('create/', views.create_secret, name='create_secret'),
     path('import/', views.import_secrets, name='import_secrets'),
+
+    # Fixed versions
+    path('fixed/search/', views.search_secrets_fixed, name='search_secrets_fixed'),
 ]
