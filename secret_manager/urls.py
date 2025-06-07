@@ -13,4 +13,5 @@ urlpatterns = [
 
     # Fixed versions
     path('fixed/search/', views.search_secrets_fixed, name='search_secrets_fixed'),
+    path('fixed/secret/<int:secret_id>/', views.secret_detail_fixed, name='secret_detail_fixed'),
 ]
