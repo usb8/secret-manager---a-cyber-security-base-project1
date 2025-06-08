@@ -27,7 +27,7 @@ ENABLE_ENCRYPTION = False  # ❌ Vulnerability: Set to False to demonstrate A3
 SECRET_MANAGER_KEY = 'one-very-secure-key-here'  # Should be in environment variables
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # 🔴 Flaw A6:2017-Security Misconfiguration
+DEBUG = True  # 🔴 Flaw A6:2017-Security Misconfiguration
 
 ALLOWED_HOSTS = []
 
