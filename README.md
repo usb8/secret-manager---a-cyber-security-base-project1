@@ -49,6 +49,17 @@ $ source .venv/bin/activate
 $ black . -S # (-S for keeping the single quote)
 ```
 
+## How to open SQLite file e.g. db.sqlite3
+1. Download : Visit the official [DB Browser for SQLite website](https://sqlitebrowser.org/) and download the version that fits your operating system (Windows, macOS, or Linux).
+2. Setting
+3. Open file
+  - Click the `Open Database` button in the upper left corner.
+  - Browse to the location of the `db.sqlite3` file on your laptop and select it.
+  - Once opened, you can:
+    - View the data tables in the `Database Structure` tab .
+    - Execute the SQL query in the `Execute SQL` tab .
+    - View or edit data in the `Browse Data` tab .
+
 # NOTE
 ## Before commit
 ```shell

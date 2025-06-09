@@ -29,6 +29,15 @@ def logout_view(request):
     return redirect('login')
 
 
+@login_required
+def secrets(request):
+    # 🔴 Flaw A6:2017-Security Misconfiguration (Debug mode left on)
+    # In settings.py we would have DEBUG = True in the vulnerable version
+
+    secrets = Secret.objects.filter(user=request.user)
+    return render(request, 'secrets.html', {'secrets': secrets})
+
+
 # 🔴🔴 Flaw A1:2017-Injection (Raw SQL query without parameterization)
 @login_required
 def search_secrets(request):
@@ -140,12 +149,3 @@ def import_secrets(request):
         return redirect('secrets')
 
     return render(request, 'import_secrets.html')
-
-
-@login_required
-def secrets(request):
-    # 🔴 Flaw A6:2017-Security Misconfiguration (Debug mode left on)
-    # In settings.py we would have DEBUG = True in the vulnerable version
-
-    secrets = Secret.objects.filter(user=request.user)
-    return render(request, 'secrets.html', {'secrets': secrets})
