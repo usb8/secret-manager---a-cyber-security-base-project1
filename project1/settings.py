@@ -24,14 +24,16 @@ SECRET_KEY = 'django-insecure-0sx$4-3-e=1a1j2$81_056jsrv21#fsk=_v=(47=&o^pfwxu=h
 
 # Encryption settings
 # 🔴🟢 Flaw A3:2017-Sensitive Data Exposure (Showing decrypted secrets in sql table)
-# ENABLE_ENCRYPTION = False  # ❌ Vulnerability: Set to False to demonstrate A3
-ENABLE_ENCRYPTION = True  # ✔️ Fixed for A3:2017 (Showing decrypted secrets in sql table)
+ENABLE_ENCRYPTION = False  # ❌ Vulnerability: Set to False to demonstrate A3
+# ENABLE_ENCRYPTION = True  # ✔️ Fixed for A3:2017 (Showing decrypted secrets in sql table)
 SECRET_MANAGER_KEY = 'one-very-secure-key-here'  # Should be in environment variables
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # 🔴 Flaw A6:2017-Security Misconfiguration
-
-ALLOWED_HOSTS = []
+# 🔴 Flaw A6:2017-Security Misconfiguration
+# DEBUG = True # ❌ Vulnerability: Set to True to demonstrate A6
+# ALLOWED_HOSTS = []  # ❌
+DEBUG = False # ✔️ Fixed for A6:2017
+ALLOWED_HOSTS = ['localhost', '127.0.0.1'] # ✔️ Fixed for A6:2017 (Only hosts that are allowed to access the application)
 
 
 # Application definition

@@ -149,3 +149,10 @@ def import_secrets(request):
         return redirect('secrets')
 
     return render(request, 'import_secrets.html')
+
+
+# Demo Flaw A6:2017-Security Misconfiguration
+def vulnerable_view(request):
+    # Intentionally create division by zero error
+    result = 1 / 0
+    return HttpResponse(result)
