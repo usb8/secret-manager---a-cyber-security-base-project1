@@ -20,7 +20,7 @@ urlpatterns = [
         name='secret_detail_fixed',
     ),
     # path('fixed/create/', views.create_secret_fixed, name='create_secret_fixed'),
-    # path('fixed/import/', views.import_secrets_fixed, name='import_secrets_fixed'),
+    path('fixed/import/', views.import_secrets_fixed, name='import_secrets_fixed'),
 
     path('vulnerable/', views.vulnerable_view, name='vulnerable_view'),    
 ]

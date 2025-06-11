@@ -140,14 +140,51 @@ def import_secrets(request):
     if request.method == 'POST' and request.FILES['file']:
         uploaded_file = request.FILES['file']
 
-        # ❌ Dangerous deserialization
-        data = pickle.load(uploaded_file)
-        for item in data:
-            Secret.objects.create(
-                user=request.user, title=item['title'], content=item['content']
-            )
-        return redirect('secrets')
+        try:
+            # ❌ Dangerous deserialization
+            data = pickle.load(uploaded_file)
+            for item in data:
+                Secret.objects.create(
+                    user=request.user,
+                    title=item['title'],
+                    secret_key=item['content'],
+                    is_encrypted=False
+                )
+            return redirect('secrets')
+        except Exception as e:
+            return HttpResponse(f"Error: {str(e)}", status=400)
 
+    return render(request, 'import_secrets.html')
+
+
+# 🟢 Fixed for A8:2017 (Dangerous deserialization)
+@login_required
+def import_secrets_fixed(request):
+    if request.method == 'POST' and request.FILES['file']:
+        uploaded_file = request.FILES['file']
+        
+        # ✔️ Only accept JSON files
+        if not uploaded_file.name.endswith('.json'):
+            return HttpResponse("Only JSON files are allowed", status=400)
+        
+        try:
+            import json
+            # ✔️ Safe JSON parsing
+            data = json.load(uploaded_file)
+            for item in data:
+                if not all(k in item for k in ['title', 'content']):
+                    continue
+                
+                Secret.objects.create(
+                    user=request.user,
+                    title=item['title'],
+                    secret_key=item['content'],
+                    is_encrypted=True  # Auto-encrypt
+                )
+            return redirect('secrets')
+        except json.JSONDecodeError:
+            return HttpResponse("Invalid JSON file", status=400)
+    
     return render(request, 'import_secrets.html')
 
 
