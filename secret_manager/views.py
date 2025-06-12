@@ -69,6 +69,7 @@ def search_secrets(request):
 
     return render(request, 'secrets.html', {'secrets': secrets})
 
+
 # 🟢🟢 Fixed for A1:2017 (Raw SQL query without parameterization)
 @login_required
 def search_secrets_fixed(request):
@@ -148,7 +149,7 @@ def import_secrets(request):
                     user=request.user,
                     title=item['title'],
                     secret_key=item['content'],
-                    is_encrypted=False
+                    is_encrypted=False,
                 )
             return redirect('secrets')
         except Exception as e:
@@ -162,29 +163,30 @@ def import_secrets(request):
 def import_secrets_fixed(request):
     if request.method == 'POST' and request.FILES['file']:
         uploaded_file = request.FILES['file']
-        
+
         # ✔️ Only accept JSON files
         if not uploaded_file.name.endswith('.json'):
             return HttpResponse("Only JSON files are allowed", status=400)
-        
+
         try:
             import json
+
             # ✔️ Safe JSON parsing
             data = json.load(uploaded_file)
             for item in data:
                 if not all(k in item for k in ['title', 'content']):
                     continue
-                
+
                 Secret.objects.create(
                     user=request.user,
                     title=item['title'],
                     secret_key=item['content'],
-                    is_encrypted=True  # Auto-encrypt
+                    is_encrypted=True,  # Auto-encrypt
                 )
             return redirect('secrets')
         except json.JSONDecodeError:
             return HttpResponse("Invalid JSON file", status=400)
-    
+
     return render(request, 'import_secrets.html')
 
 

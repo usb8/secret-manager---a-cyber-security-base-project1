@@ -32,8 +32,11 @@ SECRET_MANAGER_KEY = 'one-very-secure-key-here'  # Should be in environment vari
 # 🔴 Flaw A6:2017-Security Misconfiguration
 # DEBUG = True # ❌ Vulnerability: Set to True to demonstrate A6
 # ALLOWED_HOSTS = []  # ❌
-DEBUG = False # ✔️ Fixed for A6:2017
-ALLOWED_HOSTS = ['localhost', '127.0.0.1'] # ✔️ Fixed for A6:2017 (Only hosts that are allowed to access the application)
+DEBUG = False  # ✔️ Fixed for A6:2017
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+]  # ✔️ Fixed for A6:2017 (Only hosts that are allowed to access the application)
 
 
 # Application definition
@@ -52,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware', # 🔴 Flaw A5:2017-Broken Access Control (CSRF middleware), Disabled for A5 demonstration
+    'django.middleware.csrf.CsrfViewMiddleware',  # 🔴 Flaw A5:2017-Broken Access Control (CSRF middleware), Disabled for A5 demonstration
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
