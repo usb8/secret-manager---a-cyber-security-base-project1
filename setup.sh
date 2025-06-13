@@ -15,34 +15,35 @@ python3 manage.py shell << EOF
 from django.contrib.auth.models import User
 from secret_manager.models import Secret
 
-# Create default users
-User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
-User.objects.create_user('alice', 'alice@example.com', 'AlicePassword123!')
-User.objects.create_user('bob', 'bob@example.com', 'BobPassword123!')
+if not User.objects.filter(username='admin').exists():
+  # Create default users
+  User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+  User.objects.create_user('alice', 'alice@example.com', 'AlicePassword123!')
+  User.objects.create_user('bob', 'bob@example.com', 'BobPassword123!')
 
-# Create some sample secrets
-alice = User.objects.get(username='alice')
-bob = User.objects.get(username='bob')
+  # Create some sample secrets
+  alice = User.objects.get(username='alice')
+  bob = User.objects.get(username='bob')
 
-Secret.objects.create(
-    user=alice,
-    title="Bank Account",
-    secret_header="Username: alice_bank",
-    secret_key="s3cr3t123",
-)
+  Secret.objects.create(
+      user=alice,
+      title="Bank Account",
+      secret_header="Username: alice_bank",
+      secret_key="s3cr3t123",
+  )
 
-Secret.objects.create(
-    user=alice,
-    title="Treasure Location",
-    secret_key="Under the oak tree in the backyard",
-)
+  Secret.objects.create(
+      user=alice,
+      title="Treasure Location",
+      secret_key="Under the oak tree in the backyard",
+  )
 
-Secret.objects.create(
-    user=bob,
-    title="Email Password",
-    secret_header="Email: bob_sub@example.com",
-    secret_key="b0b3m@il",
-)
+  Secret.objects.create(
+      user=bob,
+      title="Email Password",
+      secret_header="Email: bob_sub@example.com",
+      secret_key="b0b3m@il",
+  )
 EOF
 
 echo "Setup complete. Use 'bash ./run.sh' to start the server."

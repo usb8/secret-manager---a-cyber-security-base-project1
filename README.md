@@ -5,26 +5,26 @@ $ python3 --version  # v3.10.12
 ```
 
 ## Structure
+- Prerequisite: understanding of Django project structure and how to create a Django app 
 ```
 cyber-security-prj1/
+├── (.venv/)
+├── attack_files/       - Contains attack files
 ├── project1/
-│   ├── __init__.py
-│   ├── settings.py
+│   ├── asgi.py
+│   ├── settings.py     - Django project configuration
 │   ├── urls.py
 │   └── wsgi.py
+├── screenshots/        - Contains demo photos of flaws before and after fixing
 ├── secret_manager/
-│   ├── models.py
-│   ├── views.py
-│   ├── templates/
-│   │   ├── base.html
-│   │   ├── login.html
-│   │   ├── secrets.html
-│   │   ├── secret_detail.html
-│   │   └── create_secret.html
+│   ├── templates/      - Contains HTML file
+│   ├── models.py       - Data model for secret management
+│   ├── urls.py         - URL routing for secret management application
+│   ├── views.py        - Logical handling functions for HTTP requests
 │   └── static/
 │       └── style.css
 ├── manage.py
-└── db.sqlite3
+└── (db.sqlite3)
 ```
 
 # HOW TO USE
@@ -37,6 +37,9 @@ $ bash setup.sh
 ## Run app (in venv)
 ```shell
 $ bash run.sh
+# Accounts can be used for demo:
+  # Username: alice, Pass: AlicePassword123!
+  # Username: bob, Pass: BobPassword123!
 ```
 
 ## Run test (in venv)
@@ -61,11 +64,8 @@ $ black . -S # (-S for keeping the single quote)
     - View or edit data in the `Browse Data` tab .
 
 # NOTE
-## Before commit
+## Before commit (for updating the database schema if needed)
 ```shell
 python manage.py makemigrations
 python manage.py migrate
 ```
-
-## Troubleshoot
-- Some data schema changes -> force 'db.sqlite3' to update the initial default data. If we don't want, one of simple ways for this small projetc is to reset 'db.sqlite3'.

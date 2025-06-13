@@ -8,14 +8,14 @@ import sqlite3
 import pickle
 
 
-# 🔴 Flaw A2:2017-Broken Authentication (Session fixation vulnerability)
+# Flaw A2:2017-Broken Authentication (Session fixation vulnerability)
 @csrf_exempt
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
 
-        # ❌ No session regeneration after login
+        # No session regeneration after login
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -31,7 +31,7 @@ def logout_view(request):
 
 @login_required
 def secrets(request):
-    # 🔴 Flaw A6:2017-Security Misconfiguration (Debug mode left on)
+    # Flaw A6:2017-Security Misconfiguration (Debug mode left on)
     # In settings.py we would have DEBUG = True in the vulnerable version
 
     secrets = Secret.objects.filter(user=request.user)
@@ -115,7 +115,7 @@ def secret_detail_fixed(request, secret_id):
     )
 
 
-# 🔴🔴 Flaw A5:2017-Broken Access Control (Missing user association)
+# Flaw A5:2017-Broken Access Control (Missing user association)
 @login_required
 def create_secret(request):
     if request.method == 'POST':
@@ -123,7 +123,7 @@ def create_secret(request):
         secret_header = request.POST.get('secret_header', '')
         secret_key = request.POST['secret_key']
 
-        # ❌ Vulnerable - no validation, accepts any data
+        # Vulnerable - no validation, accepts any data
         secret = Secret.objects.create(
             user=request.user,
             title=title,
@@ -190,7 +190,7 @@ def import_secrets_fixed(request):
     return render(request, 'import_secrets.html')
 
 
-# Demo Flaw A6:2017-Security Misconfiguration
+# 🔴🟢 Demo Flaw A6:2017-Security Misconfiguration
 def vulnerable_view(request):
     # Intentionally create division by zero error
     result = 1 / 0
