@@ -31,6 +31,7 @@ cyber-security-prj1/
 
 ## Setup app (in venv)
 ```shell
+$ python3 --version  # This command should work first. 'python3' command is recommended instead of 'python'.
 $ bash setup.sh
 ```
 
@@ -40,6 +41,7 @@ $ bash run.sh
 # Accounts can be used for demo:
   # Username: alice, Pass: AlicePassword123!
   # Username: bob, Pass: BobPassword123!
+# List urls for demo are mentioned in the Structure above (./secret_manager/urls.py)
 ```
 
 ## Run test (in venv)

@@ -83,13 +83,15 @@ def search_secrets_fixed(request):
     return render(request, 'secrets.html', {'secrets': secrets})
 
 
-# 🔴🔴 Flaw A3:2017-Sensitive Data Exposure (Showing decrypted secrets)
-# 🔴🔴 Flaw A5:Security Misconfiguration (No proper authorization check)
+# Flaw A3:2017-Sensitive Data Exposure (Showing decrypted secrets)
+# 🔴🔴 Flaw A5:2017-Broken Access Control (No proper authorization check)
 @login_required
 def secret_detail(request, secret_id):
-    secret = Secret.objects.get(id=secret_id)
+    secret = Secret.objects.get(
+        id=secret_id
+    )  # ❌ A5:2017 No proper authorization check, users can access any secret
 
-    # ❌ No proper authorization check (A5) and showing decrypted secret (A3)
+    # Showing decrypted secret (A3)
     decrypted_key = secret.secret_key
     if secret.is_encrypted:
         decrypted_key = secret.get_decrypted_key()
@@ -104,10 +106,12 @@ def secret_detail(request, secret_id):
 # 🟢🟢 Fixed for A5:2017 (No proper authorization check)
 @login_required
 def secret_detail_fixed(request, secret_id):
-    secret = Secret.objects.get(id=secret_id, user=request.user)  # Proper authorization
+    secret = Secret.objects.get(
+        id=secret_id, user=request.user
+    )  # ✔️ A5:2017 Proper authorization
 
     # Only show decrypted key if absolutely necessary
-    # ✔️ In a real app, we might not show it at all or use temporary viewing
+    # In a real app, we might not show it at all or use temporary viewing
     return render(
         request,
         'secret_detail.html',
