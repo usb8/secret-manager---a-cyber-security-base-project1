@@ -1,4 +1,7 @@
 # ABOUT APP
+## Introduction
+Secret Manager is a basic web application, built on the Django framework that helps users safely store sensitive information, such as passwords and secret keys. It should be noted that learning practical security is the main purpose of this app. Therefore, its design intentionally includes five common flaws (in [OWASP Top Ten vulnerabilities 2017](https://owasp.org/www-project-top-ten/)) with fixes. Naturally, it has a simple structure focusing on the backend to show visitors how to attack and defend in practice in the easiest way.
+
 ## Versions
 ```shell
 $ python3 --version  # v3.10.12
@@ -54,6 +57,13 @@ $ source .venv/bin/activate
 $ black . -S # (-S for keeping the single quote)
 ```
 
+# NOTE
+## Before commit (for updating the database schema if needed)
+```shell
+python manage.py makemigrations
+python manage.py migrate
+```
+
 ## How to open SQLite file e.g. db.sqlite3
 1. Download : Visit the official [DB Browser for SQLite website](https://sqlitebrowser.org/) and download the version that fits your operating system (Windows, macOS, or Linux).
 2. Setting
@@ -65,9 +75,8 @@ $ black . -S # (-S for keeping the single quote)
     - Execute the SQL query in the `Execute SQL` tab .
     - View or edit data in the `Browse Data` tab .
 
-# NOTE
-## Before commit (for updating the database schema if needed)
+## How to create a pickle file
 ```shell
-python manage.py makemigrations
-python manage.py migrate
+python3 attack_files/exploit.py # python attack_files/exploit.py
+# Then a new malicious.pickle file appears in folder attack_files/.
 ```
